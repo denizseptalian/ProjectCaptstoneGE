@@ -26,17 +26,16 @@ def main():
         input_vector = vectorizer.transform([user_input])
         prediction = model.predict(input_vector)
         
-        st.write(f"Debug: Predicted label is {prediction[0]}")
-        
         # Define sentiment mapping
         sentiment_mapping = {
             0: 'Negatif',
             1: 'Positif',
             2: 'Netral'
         }
-        predicted_sentiment_description = sentiment_mapping[predicted_sentiment]
         
-
+        # Get the predicted label and map it to sentiment description
+        predicted_sentiment_description = sentiment_mapping[prediction[0]]
+        
         # Create a DataFrame to display the results
         results_df = pd.DataFrame({
             'Teks Sentimen': [user_input],
