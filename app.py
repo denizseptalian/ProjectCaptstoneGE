@@ -8,70 +8,29 @@ Original file is located at
 """
 
 import streamlit as st
-from transformers import RobertaTokenizer, RobertaForSequenceClassification
-import torch
+import joblib
 import pandas as pd
 
-# Load the tokenizer and model for distilroberta-base
-tokenizer = RobertaTokenizer.from_pretrained('distilroberta-base')
-model = RobertaForSequenceClassification.from_pretrained('distilroberta-base',
-                                                         num_labels=3,
-                                                         output_attentions=False,
-                                                         output_hidden_states=False)
-
-# Function to predict sentiment of a given text
-def predict_sentiment(text):
-    model.eval()
-
-    # Tokenize and encode the text
-    inputs = tokenizer.encode_plus(
-        text,
-        add_special_tokens=True,
-        max_length=128,
-        padding='max_length',
-        return_attention_mask=True,
-        return_tensors='pt',
-        truncation=True  # Explicitly activate truncation
-    )
-
-    input_ids = inputs['input_ids'].to(device)
-    attention_mask = inputs['attention_mask'].to(device)
-
-    # Perform prediction
-    with torch.no_grad():
-        outputs = model(input_ids, attention_mask=attention_mask)
-
-    logits = outputs.logits
-    logits = logits.detach().cpu().numpy()
-
-    # Get the predicted label
-    predicted_label = logits[0].argmax()
-
-    return predicted_label
-
-# Define device
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-# Move the model to the device
-model.to(device)
+# Load model and vectorizer
+model = joblib.load('model.pkl')
+vectorizer = joblib.load('vectorizer.pkl')
 
 # Main function for the Streamlit app
 def main():
     st.title("Sentiment Analysis App")
 
-    st.write("Ini adalah aplikasi untuk analisis sentimen menggunakan distilroberta-base.")
+    st.write("Ini adalah aplikasi untuk analisis sentimen.")
 
     user_input = st.text_area("Masukkan teks untuk analisis sentimen:")
     if st.button("Analisis"):
-        predicted_sentiment = predict_sentiment(user_input)
-
-        # Map predicted label to sentiment description
+        input_vector = vectorizer.transform([user_input])
+        prediction = model.predict(input_vector)
         sentiment_mapping = {
-            0: 'Positif',
-            1: 'Negatif',
+            0: 'Negatif',
+            1: 'Positif',
             2: 'Netral'
         }
-        predicted_sentiment_description = sentiment_mapping[predicted_sentiment]
+        predicted_sentiment_description = sentiment_mapping[prediction[0]]
 
         # Create a DataFrame to display the results
         results_df = pd.DataFrame({
@@ -79,7 +38,7 @@ def main():
             'Prediksi Sentimen': [predicted_sentiment_description]
         })
 
-        st.write("\nHasil Prediksi Sentimen:")
+        st.write("Hasil Prediksi Sentimen:")
         st.write(results_df)
 
 if __name__ == "__main__":
