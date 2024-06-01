@@ -26,6 +26,9 @@ def main():
         input_vector = vectorizer.transform([user_input])
         prediction = model.predict(input_vector)
         
+        # Print prediction for debugging
+        print("Prediction:", prediction)
+        
         # Define sentiment mapping
         sentiment_mapping = {
             0: 'Negatif',
@@ -34,7 +37,7 @@ def main():
         }
         
         # Get the predicted label and map it to sentiment description
-        predicted_sentiment_description = sentiment_mapping[prediction[0]]
+        predicted_sentiment_description = sentiment_mapping.get(prediction[0], "Netral")
         
         # Create a DataFrame to display the results
         results_df = pd.DataFrame({
