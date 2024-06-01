@@ -19,7 +19,7 @@ vectorizer = joblib.load('vectorizer.pkl')
 def main():
     st.title("Sentiment Analysis App")
 
-    st.write("Ini adalah aplikasi untuk analisis sentimen.")
+    st.write("Ini adalah aplikasi untuk analisis sentimen dengan topik ESG.")
 
     user_input = st.text_area("Masukkan teks untuk analisis sentimen:")
     if st.button("Analisis"):
@@ -39,7 +39,7 @@ def main():
         if prediction[0] in sentiment_mapping:
             predicted_sentiment_description = sentiment_mapping[prediction[0]]
         else:
-            predicted_sentiment_description = "Label tidak dikenali"
+            predicted_sentiment_description = prediction[0]
 
         # Create a DataFrame to display the results
         results_df = pd.DataFrame({
