@@ -34,6 +34,7 @@ def main():
             1: 'Positif',
             2: 'Netral'
         }
+        predicted_sentiment_description = sentiment_mapping[predicted_sentiment]
         
 
         # Create a DataFrame to display the results
