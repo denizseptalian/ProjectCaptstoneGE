@@ -35,11 +35,6 @@ def main():
             2: 'Netral'
         }
         
-        # Check if the predicted label is in the mapping
-        if prediction[0] in sentiment_mapping:
-            predicted_sentiment_description = sentiment_mapping[prediction[0]]
-        else:
-            predicted_sentiment_description = prediction[0]
 
         # Create a DataFrame to display the results
         results_df = pd.DataFrame({
