@@ -60,6 +60,7 @@ elif menu == "Analisis Sentimen":
             result = sentiment_pipeline(user_input)
             sentiment = result[0]['label']
             confidence = result[0]['score']
+
             # Menampilkan hasil analisis sentimen
             st.write(f"*Sentimen:* {sentiment} dengan tingkat keyakinan {confidence:.2f}")
         else:
@@ -81,7 +82,11 @@ elif menu == "Analisis Sentimen":
                 df['text'] = df['text'].astype(str)
 
                 # Predict sentiment for each text
-                df['Prediksi Sentimen'] = df['text'].apply(lambda x: sentiment_pipeline(x)[0]['label'] if x else 'UNKNOWN')
+                def predict_sentiment(text):
+                    result = sentiment_pipeline(text)
+                    return result[0]['label']
+
+                df['Prediksi Sentimen'] = df['text'].apply(predict_sentiment)
 
                 # Display the results
                 st.write("Hasil Prediksi Sentimen:")
