@@ -1,4 +1,5 @@
 streamlit
-joblib
+transformers
 pandas
-scikit-learn
+pillow
+matplotlib
